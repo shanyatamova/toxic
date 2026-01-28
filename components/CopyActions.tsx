@@ -62,8 +62,7 @@ const CopyActions: React.FC<CopyActionsProps> = ({
           }}
         >
           <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3h6M10 3v4c0 .5-.2 1-.5 1.5L6 14c-1 1.5-1 3.5 0 5s2.5 2.5 4.5 2.5h3c2 0 3.5-1 4.5-2.5s1-3.5 0-5l-3.5-5.5C14.2 8 14 7.5 14 7V3" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.5 14h7M10 17h4" opacity="0.4" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
         </button>
       </div>

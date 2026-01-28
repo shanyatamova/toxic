@@ -205,55 +205,57 @@ const App: React.FC = () => {
       
       <header className="text-center mb-6 md:mb-10 relative z-20 w-full flex flex-col items-center">
         <h1 
-          className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap md:mt-6 transition-all duration-500"
+          className="text-4xl md:text-7xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap md:mt-10 transition-all duration-500"
           style={{ lineHeight: '1' }}
         >
           <span style={{ color: `rgb(${activeColor})` }}>TOXIC</span>COMPLIMENTS
         </h1>
+        <div className="h-0.5 w-16 bg-slate-800 mt-2 rounded-full opacity-50"></div>
       </header>
 
       {/* Кнопки категорий */}
       <div className="flex flex-row flex-wrap gap-2 md:gap-3 mb-8 md:mb-10 w-full max-w-5xl relative z-20 px-2 justify-center items-center">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            disabled={isLoading}
-            onClick={() => changeCategory(cat.id)}
-            style={{ 
-              borderColor: category === cat.id ? `rgb(${cat.color})` : 'transparent',
-              boxShadow: category === cat.id ? `0 0 20px rgba(${cat.color}, 0.2)` : 'none',
-              borderWidth: '2px',
-              lineHeight: '1.2'
-            }}
-            className={`
-              relative flex flex-row items-center justify-center py-2 px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-500 group overflow-hidden min-w-fit border-solid
-              ${category === cat.id 
-                ? 'bg-slate-900/90 scale-[1.02] opacity-100 shadow-xl cursor-default' 
-                : 'bg-slate-900/30 opacity-60 hover:opacity-100 hover:bg-slate-900/60 cursor-pointer'
-              }
-              ${isLoading ? 'opacity-40 grayscale cursor-wait' : ''}
-            `}
-          >
-            {isLoading && category === cat.id && (
-              <div className="absolute inset-0 z-40 flex items-center justify-center bg-slate-950/40 backdrop-blur-[1px]">
-                 <Spinner size={14} color={`rgb(${cat.color})`} />
+        {CATEGORIES.map((cat) => {
+          const isActive = category === cat.id;
+          return (
+            <button
+              key={cat.id}
+              disabled={isLoading}
+              onClick={() => changeCategory(cat.id)}
+              style={{ 
+                borderColor: isActive ? `rgb(${cat.color})` : 'rgba(255, 255, 255, 0.2)',
+                boxShadow: isActive ? `0 0 20px rgba(${cat.color}, 0.2)` : 'none',
+                borderWidth: isActive ? '2px' : '1px',
+                lineHeight: '1.2',
+                background: isActive ? 'rgba(15, 23, 42, 0.9)' : 'transparent',
+                color: isActive ? `rgb(${cat.color})` : 'rgba(255, 255, 255, 0.6)'
+              }}
+              className={`
+                relative flex flex-row items-center justify-center py-2 px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-500 group overflow-hidden min-w-fit border-solid
+                ${isActive ? 'scale-[1.02] opacity-100 shadow-xl cursor-default' : 'opacity-80 hover:opacity-100 hover:border-slate-500 cursor-pointer'}
+                ${isLoading ? 'opacity-40 grayscale cursor-wait' : ''}
+              `}
+            >
+              {isLoading && isActive && (
+                <div className="absolute inset-0 z-40 flex items-center justify-center bg-slate-950/40 backdrop-blur-[1px]">
+                   <Spinner size={14} color={`rgb(${cat.color})`} />
+                </div>
+              )}
+              
+              <div 
+                className={`w-3.5 h-3.5 md:w-4 md:h-4 mr-2 transition-all duration-500 ${isActive ? 'scale-110' : 'opacity-60 group-hover:opacity-100'}`}
+                style={{ color: isActive ? `rgb(${cat.color})` : 'currentColor' }}
+              >
+                {cat.icon}
               </div>
-            )}
-            
-            <div 
-              className={`w-3.5 h-3.5 md:w-4 md:h-4 mr-2 transition-all duration-500 ${category === cat.id ? 'scale-110' : 'opacity-40 grayscale group-hover:opacity-80 group-hover:grayscale-0'}`}
-              style={{ color: category === cat.id ? `rgb(${cat.color})` : '#94a3b8' }}
-            >
-              {cat.icon}
-            </div>
-            <span 
-              className="mono font-black text-[9px] md:text-[11px] uppercase tracking-widest text-center italic whitespace-nowrap"
-              style={{ color: category === cat.id ? `rgb(${cat.color})` : '#94a3b8' }}
-            >
-              {cat.label}
-            </span>
-          </button>
-        ))}
+              <span 
+                className="mono font-black text-[10px] md:text-[11px] uppercase tracking-widest text-center italic whitespace-nowrap"
+              >
+                {cat.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <main className="w-full max-w-5xl relative z-20 flex flex-col items-center">
@@ -281,8 +283,8 @@ const App: React.FC = () => {
                                         ease: [0.16, 1, 0.3, 1],
                                         delay: isLoading ? 0 : 0.2
                                       }}
-                                      className="mono text-white text-base sm:text-lg md:text-xl font-black leading-relaxed text-center italic"
-                                      style={{ textShadow: `0 4px 20px rgba(${activeColor}, 0.4), 0 0 8px rgba(0,0,0,0.8)` }}
+                                      className="mono text-white text-lg sm:text-xl md:text-2xl font-black leading-relaxed text-center italic"
+                                      style={{ textShadow: `0 4px 20px rgba(0,0,0,0.8)` }}
                                   >
                                       {compliment}
                                   </motion.p>
