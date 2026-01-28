@@ -10,19 +10,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: #020617; /* slate-950 */
             overscroll-behavior: none;
+            /* Кросс-браузерное сглаживание шрифтов */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
         
         .mono {
             font-family: 'JetBrains Mono', monospace;
+            text-rendering: optimizeSpeed;
         }
+
         @keyframes scanline {
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100%); }
         }
+
         .scanline {
             position: absolute;
             top: 0;
@@ -33,6 +45,7 @@
             animation: scanline 8s linear infinite;
             pointer-events: none;
         }
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -41,7 +54,6 @@
             scrollbar-width: none;
         }
         
-        /* Улучшенная отзывчивость для кнопок */
         button:active {
             transform: scale(0.98);
         }

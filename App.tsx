@@ -58,12 +58,11 @@ interface HistoryItem {
   bgVariant: number;
 }
 
-// Ускоряем пружину: делаем её более упругой и отзывчивой
 const transitionConfig = {
   type: "spring",
-  stiffness: 240, // Повышаем жесткость для быстрого отклика
-  damping: 28,    // Оптимальное затухание, чтобы не было лишних колебаний
-  mass: 0.8,      // Облегчаем массу для скорости полета
+  stiffness: 240,
+  damping: 28,
+  mass: 0.8,
   restDelta: 0.01
 };
 
@@ -205,8 +204,11 @@ const App: React.FC = () => {
       <div className="scanline z-10"></div>
       
       <header className="text-center mb-6 md:mb-10 relative z-20 w-full flex flex-col items-center">
-        <h1 className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap leading-[0.85] md:mt-6">
-          <span style={{ color: `rgb(${activeColor})` }} className="transition-colors duration-500">TOXIC</span>COMPLIMENTS
+        <h1 
+          className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap md:mt-6 transition-all duration-500"
+          style={{ lineHeight: '1' }}
+        >
+          <span style={{ color: `rgb(${activeColor})` }}>TOXIC</span>COMPLIMENTS
         </h1>
       </header>
 
@@ -220,7 +222,8 @@ const App: React.FC = () => {
             style={{ 
               borderColor: category === cat.id ? `rgb(${cat.color})` : 'transparent',
               boxShadow: category === cat.id ? `0 0 20px rgba(${cat.color}, 0.2)` : 'none',
-              borderWidth: '2px'
+              borderWidth: '2px',
+              lineHeight: '1.2'
             }}
             className={`
               relative flex flex-row items-center justify-center py-2 px-4 md:py-2.5 md:px-6 rounded-full transition-all duration-500 group overflow-hidden min-w-fit border-solid
