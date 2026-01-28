@@ -167,8 +167,8 @@ let lastCompliment = "";
  * No API calls are made to avoid quotas or external dependencies.
  */
 export const generateToxicCompliment = async (category: ToxicCategory): Promise<string> => {
-  // Simulate a bit of "thinking" time for UI feedback
-  await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
+  // Reduced delay from 3000ms to 1500ms as requested
+  await new Promise(resolve => setTimeout(resolve, 1500));
   
   const pool = TOXIC_DATABASE[category];
   let picked: string;

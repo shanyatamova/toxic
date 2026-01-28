@@ -1,5 +1,6 @@
+
 {
-  "name": "Copy of Toxic Compliment Generator",
-  "description": "A snarky and sarcastic web app that generates backhanded compliments using Gemini AI. Perfect for those who appreciate 'aggressive' kindness.",
+  "name": "Токсичные Комплименты",
+  "description": "A snarky and sarcastic web app that generates backhanded compliments. Perfect for those who appreciate 'aggressive' kindness.",
   "requestFramePermissions": []
 }

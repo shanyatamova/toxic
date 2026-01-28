@@ -58,11 +58,13 @@ interface HistoryItem {
   bgVariant: number;
 }
 
+// Ускоряем пружину: делаем её более упругой и отзывчивой
 const transitionConfig = {
   type: "spring",
-  stiffness: 280,
-  damping: 28,
-  mass: 1
+  stiffness: 240, // Повышаем жесткость для быстрого отклика
+  damping: 28,    // Оптимальное затухание, чтобы не было лишних колебаний
+  mass: 0.8,      // Облегчаем массу для скорости полета
+  restDelta: 0.01
 };
 
 const App: React.FC = () => {
@@ -126,14 +128,7 @@ const App: React.FC = () => {
       const dataUrl = await htmlToImage.toPng(ref.current, { 
         cacheBust: true, 
         pixelRatio: 2, 
-        backgroundColor: '#050505',
-        filter: (node: HTMLElement) => {
-          if (node.tagName === 'LINK' || node.tagName === 'STYLE') {
-            const href = (node as HTMLLinkElement).href;
-            if (href && !href.includes(window.location.host)) return false;
-          }
-          return true;
-        }
+        backgroundColor: '#050505'
       });
 
       if (!navigator.clipboard || !window.ClipboardItem) {
@@ -141,14 +136,11 @@ const App: React.FC = () => {
         link.download = `toxic-${Date.now()}.png`;
         link.href = dataUrl;
         link.click();
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000);
         return;
       }
 
       const response = await fetch(dataUrl);
       const blob = await response.blob();
-      
       if (blob) {
         const item = new ClipboardItem({ 'image/png': blob });
         await navigator.clipboard.write([item]);
@@ -156,7 +148,7 @@ const App: React.FC = () => {
         setTimeout(() => setIsCopied(false), 2000);
       }
     } catch (err) {
-      console.error('Failed to capture or copy image:', err);
+      console.error('Capture failed', err);
     } finally {
       setIsCapturing(false);
     }
@@ -199,6 +191,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-start px-4 pt-4 pb-8 md:pt-6 relative overflow-hidden text-slate-200 antialiased selection:bg-white/10">
+      
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Squares 
           direction="diagonal"
@@ -212,7 +205,7 @@ const App: React.FC = () => {
       <div className="scanline z-10"></div>
       
       <header className="text-center mb-6 md:mb-10 relative z-20 w-full flex flex-col items-center">
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap leading-[0.85] md:mt-6">
+        <h1 className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic whitespace-nowrap leading-[0.85] md:mt-6">
           <span style={{ color: `rgb(${activeColor})` }} className="transition-colors duration-500">TOXIC</span>COMPLIMENTS
         </h1>
       </header>
@@ -261,10 +254,8 @@ const App: React.FC = () => {
       </div>
 
       <main className="w-full max-w-5xl relative z-20 flex flex-col items-center">
-        {/* Контейнер карточки с привязанными кнопками */}
         <div className="relative mb-10 md:mb-12">
             <div className="relative w-[260px] sm:w-[280px] md:w-[320px]">
-                {/* Сама карточка */}
                 <div className="relative p-1 rounded-[2rem] md:rounded-[2.5rem] border-[1px] border-slate-800 bg-slate-900 shadow-[0_40px_80px_rgba(0,0,0,0.8)] overflow-hidden w-full">
                     <div className="w-full h-full rounded-[1.8rem] md:rounded-[2.3rem] overflow-hidden">
                         <div 
@@ -298,7 +289,6 @@ const App: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Кнопки действий */}
                 <CopyActions 
                     onCopyText={() => handleCopyText(compliment)}
                     onCopyImage={() => handleCopyImage(captureRef)}
@@ -315,7 +305,7 @@ const App: React.FC = () => {
         </div>
 
         {history.length > 0 && (
-          <div className="w-full mt-4 max-w-4xl flex flex-col items-center">
+          <motion.div layout className="w-full mt-4 max-w-4xl flex flex-col items-center">
             <div className="w-full flex items-center justify-between mb-4 px-4">
               <div className="flex flex-col">
                 <h3 className="mono text-[9px] md:text-xs font-black uppercase tracking-[0.3em] text-slate-500 italic">Архив унижений</h3>
@@ -337,6 +327,7 @@ const App: React.FC = () => {
                 return (
                   <motion.div 
                     layoutId={`card-${item.id}`}
+                    layout
                     transition={transitionConfig}
                     key={item.id}
                     onClick={() => setSelectedItem(item)}
@@ -353,7 +344,7 @@ const App: React.FC = () => {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         )}
       </main>
 
@@ -363,15 +354,15 @@ const App: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
-              exit={{ opacity: 0, transition: { duration: 0.2 } }} 
+              exit={{ opacity: 0, transition: { duration: 0.25 } }} 
               onClick={() => setSelectedItem(null)} 
-              className="absolute inset-0 bg-slate-950/95 backdrop-blur-xl cursor-zoom-out" 
+              className="absolute inset-0 bg-slate-950/85 backdrop-blur-xl cursor-zoom-out" 
             />
-            <div className="relative w-[260px] sm:w-[280px] md:w-[320px]">
+            <div className="relative w-[260px] sm:w-[280px] md:w-[320px] pointer-events-none">
               <motion.div 
                 layoutId={`card-${selectedItem.id}`}
                 transition={transitionConfig}
-                className="relative p-1 rounded-[2.5rem] border-[1px] border-slate-800 bg-slate-900 shadow-[0_50px_100px_rgba(0,0,0,0.9)] overflow-hidden w-full"
+                className="relative p-1 rounded-[2.5rem] border-[1px] border-slate-800 bg-slate-900 shadow-[0_50px_100px_rgba(0,0,0,0.9)] overflow-hidden w-full pointer-events-auto"
               >
                  <div className="w-full h-full rounded-[2.3rem] overflow-hidden">
                     <div 
@@ -392,15 +383,15 @@ const App: React.FC = () => {
                 isLoading={isCapturing}
                 isCopied={isCopied}
                 activeColor={CATEGORIES.find(c => c.id === selectedItem.categoryId)?.color || '255,255,255'}
-                className="absolute -right-6 md:-right-7 top-1/2 -translate-y-1/2 z-30"
+                className="absolute -right-6 md:-right-7 top-1/2 -translate-y-1/2 z-30 pointer-events-auto"
               />
 
               <motion.button 
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
+                exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
                 onClick={() => setSelectedItem(null)} 
-                className="fixed top-4 right-4 md:top-6 md:right-6 p-3 md:p-4 rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition-all active:scale-90 cursor-pointer"
+                className="fixed top-4 right-4 md:top-6 md:right-6 p-3 md:p-4 rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition-all active:scale-90 cursor-pointer pointer-events-auto"
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </motion.button>
